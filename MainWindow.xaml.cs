@@ -24,5 +24,22 @@ namespace MarketMonitorApp
         {
             InitializeComponent();
         }
+
+        private void ticker_TextChanged(object sender, TextChangedEventArgs e)
+        {
+
+        }
+
+        private void ButtonSubmit_Click(object sender, RoutedEventArgs e)
+        {
+            if (!string.IsNullOrWhiteSpace(tickerName.Text) && tickerName.Text == "MSFT")
+            {
+                SavedStocks.Items.Add(tickerName.Text);
+                tickerName.Clear();
+
+                // Generate fake data
+
+            }
+        }
     }
 }
