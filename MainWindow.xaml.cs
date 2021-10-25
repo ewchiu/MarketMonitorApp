@@ -38,7 +38,15 @@ namespace MarketMonitorApp
                 tickerName.Clear();
 
                 // Generate fake data
-
+                stockInfo1.Inlines.Add(new Bold(new Run("MSFT")));
+                stockInfo1.Inlines.Add(new LineBreak());
+                stockInfo1.Inlines.Add(new Run("Current Price: $138.40"));
+                stockInfo1.Inlines.Add(new LineBreak());
+                stockInfo1.Inlines.Add(new Run("52 Week High:  $138.40"));
+                stockInfo1.Inlines.Add(new LineBreak());
+                stockInfo1.Inlines.Add(new Run("52 Week Low:   $87.90"));
+                stockInfo1.Inlines.Add(new LineBreak());
+                stockInfo1.Inlines.Add(new Run("P/E Ratio:     30.57"));
             }
         }
     }

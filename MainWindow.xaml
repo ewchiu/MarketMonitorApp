@@ -14,18 +14,19 @@
         </Grid.RowDefinitions>
 
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="135" />
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="138" />
+            <ColumnDefinition Width="85*"/>
+            <ColumnDefinition Width="86*"/>
         </Grid.ColumnDefinitions>
 
         <Label Grid.Column="0" FontSize="24" Margin="0,0,0,347" Grid.RowSpan="2" FontFamily="Haettenschweiler">MarketMonitor</Label>
-        <ListBox Grid.Row="1" x:Name="SavedStocks" />
+        <ListBox Grid.Row="1" x:Name="SavedStocks" Margin="0,0,5,0" />
         <StackPanel Grid.Row="0" Grid.Column="1" Margin="5,0,0,0">
             <Label Width="140">Enter Ticker:</Label>
             <TextBox x:Name="tickerName" Width="135" />
         </StackPanel>
-        <Button x:Name="btnSubmit" Grid.Column="2" Click="ButtonSubmit_Click"  Margin="19,28,0,0" RenderTransformOrigin="0.742,0.055" HorizontalAlignment="Left" VerticalAlignment="Top" Height="20" Width="88">Check My Stock</Button>
-
+        <Button x:Name="btnSubmit" Grid.Column="2" Click="ButtonSubmit_Click"  Margin="19,26,0,0" RenderTransformOrigin="0.742,0.055" HorizontalAlignment="Left" VerticalAlignment="Top" Height="20" Width="88">Check My Stock</Button>
+        <TextBlock Name="stockInfo1" Grid.Column="1" Grid.Row="1">
+        </TextBlock>
     </Grid>
 </Window>
