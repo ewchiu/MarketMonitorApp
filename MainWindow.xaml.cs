@@ -12,6 +12,10 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Net;
+using static MarketMonitorApp.StockInfo;
+using static MarketMonitorApp.MarketHttpClient;
+
 
 namespace MarketMonitorApp
 {
@@ -32,21 +36,24 @@ namespace MarketMonitorApp
 
         private void ButtonSubmit_Click(object sender, RoutedEventArgs e)
         {
-            if (!string.IsNullOrWhiteSpace(tickerName.Text) && tickerName.Text == "MSFT")
+            if (!string.IsNullOrWhiteSpace(tickerName.Text))
             {
-                SavedStocks.Items.Add(tickerName.Text);
+                string ticker = tickerName.Text;
+                SavedStocks.Items.Add(ticker);
                 tickerName.Clear();
 
+                var result = RetrievePrice(ticker);
+
                 // Generate fake data
-                stockInfo1.Inlines.Add(new Bold(new Run("MSFT")));
-                stockInfo1.Inlines.Add(new LineBreak());
-                stockInfo1.Inlines.Add(new Run("Current Price: $138.40"));
-                stockInfo1.Inlines.Add(new LineBreak());
-                stockInfo1.Inlines.Add(new Run("52 Week High:  $138.40"));
-                stockInfo1.Inlines.Add(new LineBreak());
-                stockInfo1.Inlines.Add(new Run("52 Week Low:   $87.90"));
-                stockInfo1.Inlines.Add(new LineBreak());
-                stockInfo1.Inlines.Add(new Run("P/E Ratio:     30.57"));
+                //stockInfo1.Inlines.Add(new Bold(new Run("MSFT")));
+                //stockInfo1.Inlines.Add(new LineBreak());
+                //stockInfo1.Inlines.Add(new Run("Current Price: $138.40"));
+                //stockInfo1.Inlines.Add(new LineBreak());
+                //stockInfo1.Inlines.Add(new Run("52 Week High:  $138.40"));
+                //stockInfo1.Inlines.Add(new LineBreak());
+                //stockInfo1.Inlines.Add(new Run("52 Week Low:   $87.90"));
+                //stockInfo1.Inlines.Add(new LineBreak());
+                //stockInfo1.Inlines.Add(new Run("P/E Ratio:     30.57"));
             }
         }
     }
