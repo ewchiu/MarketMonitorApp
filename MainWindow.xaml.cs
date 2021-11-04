@@ -13,8 +13,10 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Net;
-using static MarketMonitorApp.StockInfo;
-using static MarketMonitorApp.MarketHttpClient;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using Newtonsoft.Json;
+using QuickType;
 
 
 namespace MarketMonitorApp
@@ -42,7 +44,10 @@ namespace MarketMonitorApp
                 SavedStocks.Items.Add(ticker);
                 tickerName.Clear();
 
-                var result = RetrievePrice(ticker);
+                stockInfo1.Inlines.Add(new Bold(new Run(ticker)));
+                stockInfo1.Inlines.Add(new LineBreak());
+
+                RetrievePrice(ticker);
 
                 // Generate fake data
                 //stockInfo1.Inlines.Add(new Bold(new Run("MSFT")));
@@ -55,6 +60,18 @@ namespace MarketMonitorApp
                 //stockInfo1.Inlines.Add(new LineBreak());
                 //stockInfo1.Inlines.Add(new Run("P/E Ratio:     30.57"));
             }
+        }
+
+        public static async Task RetrievePrice(string ticker)
+        {
+            HttpClient client = new HttpClient();
+            string baseUrl = "https://xvfo29na9j.execute-api.us-west-2.amazonaws.com/PROD?ticker=";
+
+            HttpResponseMessage response = await client.GetAsync($"{baseUrl}{ticker}");
+            var json = response.Content.ReadAsStringAsync().Result;
+            var userStock = Stock.FromJson(json);
+
+            Console.WriteLine(userStock.GetType());
         }
     }
 }
