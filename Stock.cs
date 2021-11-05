@@ -1,16 +1,7 @@
-﻿using System;
+﻿using Newtonsoft.Json;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.IO;
-using System.Net;
-using System.Net.Http;
-using System.Net.Http.Headers;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
 
-namespace QuickType
+namespace StockMarket
 {
     public partial class Stock
     {
@@ -36,7 +27,7 @@ namespace QuickType
         public long StockSplits { get; set; }
     }
 
-    public partial class Stock
+/*    public partial class Stock
     {
         public static List<Stock> FromJson(string json) => JsonConvert.DeserializeObject<List<Stock>>(json, QuickType.Converter.Settings);
     }
@@ -57,6 +48,5 @@ namespace QuickType
                 // new IsoDateTimeConverter { DateTimeStyles = DateTimeStyles.AssumeUniversal }
             },
         };
-    }
+    }*/
 }
- 

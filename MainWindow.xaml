@@ -26,9 +26,9 @@
             <TextBox x:Name="tickerName" Width="135" />
         </StackPanel>
         <Button x:Name="btnSubmit" Grid.Column="2" Click="ButtonSubmit_Click"  Margin="0,26,0,0" RenderTransformOrigin="0.742,0.055" HorizontalAlignment="Center" VerticalAlignment="Top" Height="20" Width="88">Check My Stock</Button>
-        <TextBlock Name="stockInfo1" Grid.Column="1" Grid.Row="1">
+        <TextBlock x:Name="stockInfo1" Grid.Column="1" Grid.Row="1">
         </TextBlock>
-        <TextBlock Name="stockInfo2" Grid.Column="2" Grid.Row="1">
+        <TextBlock x:Name="stockInfo2" Grid.Column="2" Grid.Row="1">
         </TextBlock>
     </Grid>
 </Window>

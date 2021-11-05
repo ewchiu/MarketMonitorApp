@@ -7,10 +7,9 @@ using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Net;
-using System.Diagnostics;
 using System.Net.Http;
 using Newtonsoft.Json;
-using QuickType;
+using StockMarket;
 
 
 namespace MarketMonitorApp
@@ -20,6 +19,13 @@ namespace MarketMonitorApp
     /// </summary>
     public partial class MainWindow : Window
     {
+        // Stock Properties to display
+        public static double open { get; set; }
+        public static double high { get; set; }
+        public static double low { get; set; }
+        public static double close { get; set; }
+        public static long volume { get; set; }
+
         public MainWindow()
         {
             InitializeComponent();
@@ -30,7 +36,7 @@ namespace MarketMonitorApp
 
         }
 
-        private void ButtonSubmit_Click(object sender, RoutedEventArgs e)
+        private async void ButtonSubmit_Click(object sender, RoutedEventArgs e)
         {
             if (!string.IsNullOrWhiteSpace(tickerName.Text))
             {
@@ -38,21 +44,21 @@ namespace MarketMonitorApp
                 SavedStocks.Items.Add(ticker);
                 tickerName.Clear();
 
-                stockInfo1.Inlines.Add(new Bold(new Run(ticker)));
+                stockInfo1.Inlines.Add(new Bold(new Run($"Ticker: {ticker}")));
                 stockInfo1.Inlines.Add(new LineBreak());
 
-                RetrievePrice(ticker);
+                await RetrievePrice(ticker);
 
-                // Generate fake data
-                // stockInfo1.Inlines.Add(new Bold(new Run("MSFT")));
-                //stockInfo1.Inlines.Add(new LineBreak());
-                //stockInfo1.Inlines.Add(new Run("Current Price: $138.40"));
-                //stockInfo1.Inlines.Add(new LineBreak());
-                //stockInfo1.Inlines.Add(new Run("52 Week High:  $138.40"));
-                //stockInfo1.Inlines.Add(new LineBreak());
-                //stockInfo1.Inlines.Add(new Run("52 Week Low:   $87.90"));
-                //stockInfo1.Inlines.Add(new LineBreak());
-                //stockInfo1.Inlines.Add(new Run("P/E Ratio:     30.57"));
+                // display stock data
+                stockInfo1.Inlines.Add(new Run($"Open: ${open}"));
+                stockInfo1.Inlines.Add(new LineBreak());
+                stockInfo1.Inlines.Add(new Run($"Current/Close: ${close}"));
+                stockInfo1.Inlines.Add(new LineBreak());
+                stockInfo1.Inlines.Add(new Run($"Low: ${low}"));
+                stockInfo1.Inlines.Add(new LineBreak());
+                stockInfo1.Inlines.Add(new Run($"High: ${high}"));
+                stockInfo1.Inlines.Add(new LineBreak());
+                stockInfo1.Inlines.Add(new Run($"Volume: {volume}"));
             }
             else
             {
@@ -67,12 +73,13 @@ namespace MarketMonitorApp
 
             HttpResponseMessage response = await client.GetAsync($"{baseUrl}{ticker}");
             var res = await response.Content.ReadAsStringAsync();
-
             List<Stock> stockInfo = JsonConvert.DeserializeObject<List<Stock>>(res);
-            foreach (var stock in stockInfo)
-            {
-                Debug.WriteLine(stock.Open.ToString());
-            }
+
+            open = stockInfo[0].Open;
+            high = stockInfo[0].High;
+            low = stockInfo[0].Low;
+            close = stockInfo[0].Close;
+            volume = stockInfo[0].Volume;
 
         }
     }
