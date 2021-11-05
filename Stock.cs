@@ -54,7 +54,7 @@ namespace QuickType
             DateParseHandling = DateParseHandling.None,
             Converters =
             {
-                new IsoDateTimeConverter { DateTimeStyles = DateTimeStyles.AssumeUniversal }
+                // new IsoDateTimeConverter { DateTimeStyles = DateTimeStyles.AssumeUniversal }
             },
         };
     }
