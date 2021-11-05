@@ -7,6 +7,7 @@ using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Net;
+using System.Diagnostics;
 using System.Net.Http;
 using Newtonsoft.Json;
 using QuickType;
@@ -40,7 +41,7 @@ namespace MarketMonitorApp
                 stockInfo1.Inlines.Add(new Bold(new Run(ticker)));
                 stockInfo1.Inlines.Add(new LineBreak());
 
-                // RetrievePrice(ticker);
+                RetrievePrice(ticker);
 
                 // Generate fake data
                 // stockInfo1.Inlines.Add(new Bold(new Run("MSFT")));
@@ -65,12 +66,13 @@ namespace MarketMonitorApp
             string baseUrl = "https://xvfo29na9j.execute-api.us-west-2.amazonaws.com/PROD?ticker=";
 
             HttpResponseMessage response = await client.GetAsync($"{baseUrl}{ticker}");
-            var json = response.Content.ReadAsStringAsync().Result;
-            var userStock = Stock.FromJson(json);
+            var res = await response.Content.ReadAsStringAsync();
 
-            List<Stock> stockInfo = new List<Stock>();
-            stockInfo.Add(userStock);
-
+            List<Stock> stockInfo = JsonConvert.DeserializeObject<List<Stock>>(res);
+            foreach (var stock in stockInfo)
+            {
+                Debug.WriteLine(stock.Open.ToString());
+            }
 
         }
     }
