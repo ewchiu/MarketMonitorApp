@@ -43,6 +43,7 @@ namespace MarketMonitorApp
                 string ticker = tickerName.Text;
                 SavedStocks.Items.Add(ticker);
                 tickerName.Clear();
+                stockInfo1.Text = "";
 
                 stockInfo1.Inlines.Add(new Bold(new Run($"Ticker: {ticker}")));
                 stockInfo1.Inlines.Add(new LineBreak());
