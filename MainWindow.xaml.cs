@@ -25,6 +25,7 @@ namespace MarketMonitorApp
         public static double low { get; set; }
         public static double close { get; set; }
         public static long volume { get; set; }
+        public string lastTicker { get; set; }
 
         public MainWindow()
         {
@@ -50,16 +51,28 @@ namespace MarketMonitorApp
 
                 await RetrievePrice(ticker);
 
-                // display stock data
-                stockInfo1.Inlines.Add(new Run($"Open: ${open}"));
+                // display labels for data
+                stockInfo1.Inlines.Add(new Run("Open:"));
                 stockInfo1.Inlines.Add(new LineBreak());
-                stockInfo1.Inlines.Add(new Run($"Current/Close: ${close}"));
+                stockInfo1.Inlines.Add(new Run("Current/Close:"));
                 stockInfo1.Inlines.Add(new LineBreak());
-                stockInfo1.Inlines.Add(new Run($"Low: ${low}"));
+                stockInfo1.Inlines.Add(new Run("Low:"));
                 stockInfo1.Inlines.Add(new LineBreak());
-                stockInfo1.Inlines.Add(new Run($"High: ${high}"));
+                stockInfo1.Inlines.Add(new Run("High:"));
                 stockInfo1.Inlines.Add(new LineBreak());
-                stockInfo1.Inlines.Add(new Run($"Volume: {volume}"));
+                stockInfo1.Inlines.Add(new Run("Volume:"));
+
+                // display prices/data
+                stockInfo2.Inlines.Add(new LineBreak());
+                stockInfo2.Inlines.Add(new Run($"${open}"));
+                stockInfo2.Inlines.Add(new LineBreak());
+                stockInfo2.Inlines.Add(new Run($"${close}"));
+                stockInfo2.Inlines.Add(new LineBreak());
+                stockInfo2.Inlines.Add(new Run($"${low}"));
+                stockInfo2.Inlines.Add(new LineBreak());
+                stockInfo2.Inlines.Add(new Run($"${high}"));
+                stockInfo2.Inlines.Add(new LineBreak());
+                stockInfo2.Inlines.Add(new Run($" {volume}"));
             }
             else
             {
@@ -76,12 +89,17 @@ namespace MarketMonitorApp
             var res = await response.Content.ReadAsStringAsync();
             List<Stock> stockInfo = JsonConvert.DeserializeObject<List<Stock>>(res);
 
-            open = stockInfo[0].Open;
-            high = stockInfo[0].High;
-            low = stockInfo[0].Low;
-            close = stockInfo[0].Close;
+            open = RoundPrice(stockInfo[0].Open);
+            high = RoundPrice(stockInfo[0].High);
+            low = RoundPrice(stockInfo[0].Low);
+            close = RoundPrice(stockInfo[0].Close);
             volume = stockInfo[0].Volume;
 
+        }
+
+        public static double RoundPrice(double price)
+        {
+            return Math.Round(price, 2, MidpointRounding.AwayFromZero);
         }
     }
 }
