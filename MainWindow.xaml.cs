@@ -114,7 +114,7 @@ namespace MarketMonitorApp
             stockInfo2.Inlines.Add(new LineBreak());
             stockInfo2.Inlines.Add(new Run($"${high}"));
             stockInfo2.Inlines.Add(new LineBreak());
-            stockInfo2.Inlines.Add(new Run($" {volume}"));
+            stockInfo2.Inlines.Add(new Run($"{volume}"));
         }
 
         public static double RoundPrice(double price)
