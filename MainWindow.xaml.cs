@@ -30,6 +30,19 @@ namespace MarketMonitorApp
         public MainWindow()
         {
             InitializeComponent();
+
+            // display data labels
+            stockInfo1.Inlines.Add(new Bold(new Run($"Ticker:")));
+            stockInfo1.Inlines.Add(new LineBreak());
+            stockInfo1.Inlines.Add(new Run("Open:"));
+            stockInfo1.Inlines.Add(new LineBreak());
+            stockInfo1.Inlines.Add(new Run("Current/Close:"));
+            stockInfo1.Inlines.Add(new LineBreak());
+            stockInfo1.Inlines.Add(new Run("Low:"));
+            stockInfo1.Inlines.Add(new LineBreak());
+            stockInfo1.Inlines.Add(new Run("High:"));
+            stockInfo1.Inlines.Add(new LineBreak());
+            stockInfo1.Inlines.Add(new Run("Volume:"));
         }
 
         private void ticker_TextChanged(object sender, TextChangedEventArgs e)
@@ -44,25 +57,13 @@ namespace MarketMonitorApp
                 string ticker = tickerName.Text;
                 SavedStocks.Items.Add(ticker);
                 tickerName.Clear();
-                stockInfo1.Text = "";
-
-                stockInfo1.Inlines.Add(new Bold(new Run($"Ticker: {ticker}")));
-                stockInfo1.Inlines.Add(new LineBreak());
-
+                
                 await RetrievePrice(ticker);
-
-                // display labels for data
-                stockInfo1.Inlines.Add(new Run("Open:"));
-                stockInfo1.Inlines.Add(new LineBreak());
-                stockInfo1.Inlines.Add(new Run("Current/Close:"));
-                stockInfo1.Inlines.Add(new LineBreak());
-                stockInfo1.Inlines.Add(new Run("Low:"));
-                stockInfo1.Inlines.Add(new LineBreak());
-                stockInfo1.Inlines.Add(new Run("High:"));
-                stockInfo1.Inlines.Add(new LineBreak());
-                stockInfo1.Inlines.Add(new Run("Volume:"));
+                lastTicker = ticker;
+                stockInfo2.Text = "";
 
                 // display prices/data
+                stockInfo2.Inlines.Add(new Bold(new Run($"{ticker}")));
                 stockInfo2.Inlines.Add(new LineBreak());
                 stockInfo2.Inlines.Add(new Run($"${open}"));
                 stockInfo2.Inlines.Add(new LineBreak());
@@ -97,9 +98,29 @@ namespace MarketMonitorApp
 
         }
 
+        private async void ButtonRefresh_Click(object sender, RoutedEventArgs e)
+        {
+            stockInfo2.Text = "";
+            await RetrievePrice(lastTicker);
+            
+            // display prices/data
+            stockInfo2.Inlines.Add(new Bold(new Run($"{lastTicker}")));
+            stockInfo2.Inlines.Add(new LineBreak());
+            stockInfo2.Inlines.Add(new Run($"${open}"));
+            stockInfo2.Inlines.Add(new LineBreak());
+            stockInfo2.Inlines.Add(new Run($"${close}"));
+            stockInfo2.Inlines.Add(new LineBreak());
+            stockInfo2.Inlines.Add(new Run($"${low}"));
+            stockInfo2.Inlines.Add(new LineBreak());
+            stockInfo2.Inlines.Add(new Run($"${high}"));
+            stockInfo2.Inlines.Add(new LineBreak());
+            stockInfo2.Inlines.Add(new Run($" {volume}"));
+        }
+
         public static double RoundPrice(double price)
         {
             return Math.Round(price, 2, MidpointRounding.AwayFromZero);
         }
+
     }
 }
