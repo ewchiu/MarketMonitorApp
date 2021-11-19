@@ -116,7 +116,7 @@ namespace MarketMonitorApp
 
         private async void ButtonRefresh_Click(object sender, RoutedEventArgs e)
         {
-            if (lastTicker == null)
+            if (lastTicker is null)
             {
                 stockInfo2.Text = "The ticker was invalid.\nPlease enter a valid ticker.";
                 return;
@@ -142,8 +142,14 @@ namespace MarketMonitorApp
 
         private async void HistoryListBox_OnPreviewMouseDown(object sender, MouseButtonEventArgs e)
         {
-            stockInfo2.Text = "Retrieving info...";
             var lbi = ItemsControl.ContainerFromElement(sender as ListBox, e.OriginalSource as DependencyObject) as ListBoxItem;
+
+            if (lbi is null)
+            {
+                return;
+            }
+
+            stockInfo2.Text = "Retrieving info...";
             string ticker = lbi.Content.ToString();
             await RetrievePrice(ticker);
             lastTicker = ticker;
