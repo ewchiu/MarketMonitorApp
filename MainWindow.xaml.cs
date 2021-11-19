@@ -117,6 +117,28 @@ namespace MarketMonitorApp
             stockInfo2.Inlines.Add(new Run($"{volume}"));
         }
 
+        private async void HistoryListBox_OnPreviewMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            var lbi = ItemsControl.ContainerFromElement(sender as ListBox, e.OriginalSource as DependencyObject) as ListBoxItem;
+            string ticker = lbi.Content.ToString();
+            await RetrievePrice(ticker);
+            lastTicker = ticker;
+            stockInfo2.Text = "";
+
+            // display prices/data
+            stockInfo2.Inlines.Add(new Bold(new Run($"{ticker}")));
+            stockInfo2.Inlines.Add(new LineBreak());
+            stockInfo2.Inlines.Add(new Run($"${open}"));
+            stockInfo2.Inlines.Add(new LineBreak());
+            stockInfo2.Inlines.Add(new Run($"${close}"));
+            stockInfo2.Inlines.Add(new LineBreak());
+            stockInfo2.Inlines.Add(new Run($"${low}"));
+            stockInfo2.Inlines.Add(new LineBreak());
+            stockInfo2.Inlines.Add(new Run($"${high}"));
+            stockInfo2.Inlines.Add(new LineBreak());
+            stockInfo2.Inlines.Add(new Run($" {volume}"));
+        }
+
         public static double RoundPrice(double price)
         {
             return Math.Round(price, 2, MidpointRounding.AwayFromZero);

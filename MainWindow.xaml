@@ -5,11 +5,11 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MarketMonitorApp"
         mc:Ignorable="d"
-        Title="MarketMonitor - Real Time Stock Updates" Height="500" Width="500">
+        Title="MarketMonitor - Real Time Stock Updates" Height="300" Width="500">
     <Grid Margin="10">
 
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" MinHeight="56" />
+            <RowDefinition Height="Auto" MinHeight="46" />
             <RowDefinition />
         </Grid.RowDefinitions>
 
@@ -19,14 +19,16 @@
             <ColumnDefinition Width="83*"/>
         </Grid.ColumnDefinitions>
 
-        <Label Grid.Column="0" FontSize="24" Margin="0,0,0,347" Grid.RowSpan="2" FontFamily="Haettenschweiler">MarketMonitor</Label>
-        <ListBox Grid.Row="1" x:Name="SavedStocks" Margin="0,0,5,0" />
-        <StackPanel Grid.Row="0" Grid.Column="1" Margin="5,0,0,0">
-            <Label Width="140">Enter Ticker:</Label>
+        <Label Grid.Column="0" FontSize="24" FontFamily="Haettenschweiler" Margin="0,0,0,10">MarketMonitor</Label>
+        <Label Grid.Column="0" Grid.Row="1">History:</Label>
+        <ListBox Grid.Row="1" Grid.Column="0" x:Name="SavedStocks" PreviewMouseDown="HistoryListBox_OnPreviewMouseDown" SelectionMode="Single" Margin="0,27,5,0">
+        </ListBox>
+        <StackPanel Grid.Row="0" Grid.Column="1" Margin="5,0,0,0" RenderTransformOrigin="0.538,0.209">
+            <Label Width="76" Content="Enter Ticker:" Height="23"/>
             <TextBox x:Name="tickerName" Width="74" RenderTransformOrigin="0.498,0.52" />
         </StackPanel>
-        <Button x:Name="btnSubmit" Grid.Column="2" Click="ButtonSubmit_Click"  Margin="22,26,0,0" RenderTransformOrigin="0.742,0.055" HorizontalAlignment="Left" VerticalAlignment="Top" Height="20" Width="88">Check My Stock</Button>
-        <Button x:Name="btnRefresh" Grid.Column="2" Click="ButtonRefresh_Click"  Margin="131,26,0,0" RenderTransformOrigin="0.742,0.055" HorizontalAlignment="Left" VerticalAlignment="Top" Height="20" Width="44">Refresh</Button>
+        <Button x:Name="btnSubmit" Grid.Column="2" Click="ButtonSubmit_Click"  Margin="5,18,0,0" RenderTransformOrigin="0.742,0.055" HorizontalAlignment="Left" VerticalAlignment="Top" Height="20" Width="88">Check My Stock</Button>
+        <Button x:Name="btnRefresh" Grid.Column="2" Click="ButtonRefresh_Click"  Margin="98,18,0,0" RenderTransformOrigin="0.742,0.055" HorizontalAlignment="Left" VerticalAlignment="Top" Height="20" Width="44">Refresh</Button>
         <TextBlock x:Name="stockInfo1" Grid.Column="1" Grid.Row="1">
         </TextBlock>
         <TextBlock x:Name="stockInfo2" Grid.Column="2" Grid.Row="1">
