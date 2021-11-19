@@ -27,6 +27,9 @@ namespace MarketMonitorApp
         public static long volume { get; set; }
         public string lastTicker { get; set; }
 
+        // main HttpClient
+        public static HttpClient client = new HttpClient();
+
         public MainWindow()
         {
             InitializeComponent();
@@ -34,15 +37,15 @@ namespace MarketMonitorApp
             // display data labels
             stockInfo1.Inlines.Add(new Bold(new Run($"Ticker:")));
             stockInfo1.Inlines.Add(new LineBreak());
-            stockInfo1.Inlines.Add(new Run("Open:"));
+            stockInfo1.Inlines.Add(new Run("Open"));
             stockInfo1.Inlines.Add(new LineBreak());
-            stockInfo1.Inlines.Add(new Run("Current/Close:"));
+            stockInfo1.Inlines.Add(new Run("Current/Close"));
             stockInfo1.Inlines.Add(new LineBreak());
-            stockInfo1.Inlines.Add(new Run("Low:"));
+            stockInfo1.Inlines.Add(new Run("Low"));
             stockInfo1.Inlines.Add(new LineBreak());
-            stockInfo1.Inlines.Add(new Run("High:"));
+            stockInfo1.Inlines.Add(new Run("High"));
             stockInfo1.Inlines.Add(new LineBreak());
-            stockInfo1.Inlines.Add(new Run("Volume:"));
+            stockInfo1.Inlines.Add(new Run("Volume"));
         }
 
         private void ticker_TextChanged(object sender, TextChangedEventArgs e)
@@ -52,17 +55,25 @@ namespace MarketMonitorApp
 
         private async void ButtonSubmit_Click(object sender, RoutedEventArgs e)
         {
-            if (!string.IsNullOrWhiteSpace(tickerName.Text))
-            {
-                string ticker = tickerName.Text;
-                SavedStocks.Items.Add(ticker);
-                tickerName.Clear();
+
+            stockInfo2.Text = "Retrieving info...";
+            string ticker = tickerName.Text;
+            string tickerUpper = ticker.ToUpper();
+            tickerName.Clear();
                 
-                await RetrievePrice(ticker);
-                lastTicker = ticker;
-                stockInfo2.Text = "";
+            await RetrievePrice(ticker);
+
+            if (open == 0)
+            {
+                stockInfo2.Text = "The ticker was invalid.\nPlease enter a valid ticker.";
+            }
+            else
+            {
+                SavedStocks.Items.Add(tickerUpper);
+                lastTicker = tickerUpper;
 
                 // display prices/data
+                stockInfo2.Text = "";
                 stockInfo2.Inlines.Add(new Bold(new Run($"{ticker}")));
                 stockInfo2.Inlines.Add(new LineBreak());
                 stockInfo2.Inlines.Add(new Run($"${open}"));
@@ -75,35 +86,47 @@ namespace MarketMonitorApp
                 stockInfo2.Inlines.Add(new LineBreak());
                 stockInfo2.Inlines.Add(new Run($" {volume}"));
             }
-            else
-            {
-                stockInfo1.Inlines.Add(new Run("The ticker you entered was invalid"));
-            }
+
+
         }
 
         public static async Task RetrievePrice(string ticker)
         {
-            HttpClient client = new HttpClient();
+            
             string baseUrl = "https://xvfo29na9j.execute-api.us-west-2.amazonaws.com/PROD?ticker=";
 
             HttpResponseMessage response = await client.GetAsync($"{baseUrl}{ticker}");
             var res = await response.Content.ReadAsStringAsync();
             List<Stock> stockInfo = JsonConvert.DeserializeObject<List<Stock>>(res);
 
-            open = RoundPrice(stockInfo[0].Open);
-            high = RoundPrice(stockInfo[0].High);
-            low = RoundPrice(stockInfo[0].Low);
-            close = RoundPrice(stockInfo[0].Close);
-            volume = stockInfo[0].Volume;
-
+            // check if we received a valid response from microservice
+            if (stockInfo.Count == 0)
+            {
+                open = 0;
+            }
+            else
+            {
+                open = RoundPrice(stockInfo[0].Open);
+                high = RoundPrice(stockInfo[0].High);
+                low = RoundPrice(stockInfo[0].Low);
+                close = RoundPrice(stockInfo[0].Close);
+                volume = stockInfo[0].Volume;
+            }
         }
 
         private async void ButtonRefresh_Click(object sender, RoutedEventArgs e)
         {
-            stockInfo2.Text = "";
-            await RetrievePrice(lastTicker);
+            if (lastTicker == null)
+            {
+                stockInfo2.Text = "The ticker was invalid.\nPlease enter a valid ticker.";
+                return;
+            }
             
+            stockInfo2.Text = "Retrieving info...";
+            await RetrievePrice(lastTicker);
+
             // display prices/data
+            stockInfo2.Text = "";
             stockInfo2.Inlines.Add(new Bold(new Run($"{lastTicker}")));
             stockInfo2.Inlines.Add(new LineBreak());
             stockInfo2.Inlines.Add(new Run($"${open}"));
@@ -119,13 +142,14 @@ namespace MarketMonitorApp
 
         private async void HistoryListBox_OnPreviewMouseDown(object sender, MouseButtonEventArgs e)
         {
+            stockInfo2.Text = "Retrieving info...";
             var lbi = ItemsControl.ContainerFromElement(sender as ListBox, e.OriginalSource as DependencyObject) as ListBoxItem;
             string ticker = lbi.Content.ToString();
             await RetrievePrice(ticker);
             lastTicker = ticker;
-            stockInfo2.Text = "";
 
             // display prices/data
+            stockInfo2.Text = "";
             stockInfo2.Inlines.Add(new Bold(new Run($"{ticker}")));
             stockInfo2.Inlines.Add(new LineBreak());
             stockInfo2.Inlines.Add(new Run($"${open}"));
