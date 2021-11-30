@@ -3,10 +3,8 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
-using System.Net;
 using System.Net.Http;
 using Newtonsoft.Json;
 using StockMarket;
@@ -14,9 +12,6 @@ using StockMarket;
 
 namespace MarketMonitorApp
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
     public partial class MainWindow : Window
     {
         // Stock Properties to display
@@ -48,14 +43,9 @@ namespace MarketMonitorApp
             stockInfo1.Inlines.Add(new Run("Volume"));
         }
 
-        private void ticker_TextChanged(object sender, TextChangedEventArgs e)
-        {
-
-        }
-
         private async void ButtonSubmit_Click(object sender, RoutedEventArgs e)
         {
-
+            // Retrieves user input and retrieves and displays stock price
             stockInfo2.Text = "Retrieving info...";
             string ticker = tickerName.Text;
             string tickerUpper = ticker.ToUpper();
@@ -86,13 +76,11 @@ namespace MarketMonitorApp
                 stockInfo2.Inlines.Add(new LineBreak());
                 stockInfo2.Inlines.Add(new Run($" {volume}"));
             }
-
-
         }
 
         public static async Task RetrievePrice(string ticker)
         {
-            
+            // Sends request to microservice and saves the stock prices in the response object
             string baseUrl = "https://xvfo29na9j.execute-api.us-west-2.amazonaws.com/PROD?ticker=";
 
             HttpResponseMessage response = await client.GetAsync($"{baseUrl}{ticker}");
@@ -116,6 +104,7 @@ namespace MarketMonitorApp
 
         private async void ButtonRefresh_Click(object sender, RoutedEventArgs e)
         {
+            // Handles refresh button functionality
             if (lastTicker is null)
             {
                 stockInfo2.Text = "The ticker was invalid.\nPlease enter a valid ticker.";
@@ -142,6 +131,7 @@ namespace MarketMonitorApp
 
         private async void HistoryListBox_OnPreviewMouseDown(object sender, MouseButtonEventArgs e)
         {
+            // Retrieves and displays stock price when a ticker in the history section is selected
             var lbi = ItemsControl.ContainerFromElement(sender as ListBox, e.OriginalSource as DependencyObject) as ListBoxItem;
 
             if (lbi is null)
@@ -173,6 +163,5 @@ namespace MarketMonitorApp
         {
             return Math.Round(price, 2, MidpointRounding.AwayFromZero);
         }
-
     }
 }
