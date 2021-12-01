@@ -22,6 +22,11 @@ namespace MarketMonitorApp
         public static long volume { get; set; }
         public string lastTicker { get; set; }
 
+        // constants for messages/dialogs
+        private const string infoMsg = "Retrieving info...";
+        private const string invalidMsg = "The ticker was invalid.\nPlease enter a valid ticker.";
+        private const string clearText = "";
+
         // main HttpClient
         public static HttpClient client = new HttpClient();
 
@@ -41,12 +46,18 @@ namespace MarketMonitorApp
             stockInfo1.Inlines.Add(new Run("High"));
             stockInfo1.Inlines.Add(new LineBreak());
             stockInfo1.Inlines.Add(new Run("Volume"));
+
+            MessageBox.Show(
+                "Enter a stock into the field and click submit to check the price." +
+                "\nClick Refresh to get the price of the last stock you checked." +
+                "\nClick a stock in the History panel to view its price."
+                );
         }
 
         private async void ButtonSubmit_Click(object sender, RoutedEventArgs e)
         {
             // Retrieves user input and retrieves and displays stock price
-            stockInfo2.Text = "Retrieving info...";
+            stockInfo2.Text = infoMsg;
             string ticker = tickerName.Text;
             string tickerUpper = ticker.ToUpper();
             tickerName.Clear();
@@ -55,7 +66,7 @@ namespace MarketMonitorApp
 
             if (open == 0)
             {
-                stockInfo2.Text = "The ticker was invalid.\nPlease enter a valid ticker.";
+                stockInfo2.Text = invalidMsg;
             }
             else
             {
@@ -63,7 +74,7 @@ namespace MarketMonitorApp
                 lastTicker = tickerUpper;
 
                 // display prices/data
-                stockInfo2.Text = "";
+                stockInfo2.Text = clearText;
                 stockInfo2.Inlines.Add(new Bold(new Run($"{ticker}")));
                 stockInfo2.Inlines.Add(new LineBreak());
                 stockInfo2.Inlines.Add(new Run($"${open}"));
@@ -107,15 +118,15 @@ namespace MarketMonitorApp
             // Handles refresh button functionality
             if (lastTicker is null)
             {
-                stockInfo2.Text = "The ticker was invalid.\nPlease enter a valid ticker.";
+                stockInfo2.Text = invalidMsg;
                 return;
             }
             
-            stockInfo2.Text = "Retrieving info...";
+            stockInfo2.Text = infoMsg;
             await RetrievePrice(lastTicker);
 
             // display prices/data
-            stockInfo2.Text = "";
+            stockInfo2.Text = clearText;
             stockInfo2.Inlines.Add(new Bold(new Run($"{lastTicker}")));
             stockInfo2.Inlines.Add(new LineBreak());
             stockInfo2.Inlines.Add(new Run($"${open}"));
@@ -139,13 +150,13 @@ namespace MarketMonitorApp
                 return;
             }
 
-            stockInfo2.Text = "Retrieving info...";
+            stockInfo2.Text = infoMsg;
             string ticker = lbi.Content.ToString();
             await RetrievePrice(ticker);
             lastTicker = ticker;
 
             // display prices/data
-            stockInfo2.Text = "";
+            stockInfo2.Text = clearText;
             stockInfo2.Inlines.Add(new Bold(new Run($"{ticker}")));
             stockInfo2.Inlines.Add(new LineBreak());
             stockInfo2.Inlines.Add(new Run($"${open}"));
